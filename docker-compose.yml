@@ -1,0 +1,50 @@
+services:
+  db:
+    image: postgres:18
+    container_name: local_pgdb_ecommerce
+    environment:
+      POSTGRES_USER: admin
+      POSTGRES_PASSWORD: admin
+      POSTGRES_DB: mydb
+    restart : always
+    ports: 
+      - "5432:5432"
+    volumes:
+      - local_pgdata_ecommerce:/var/lib/postgresql
+      - ./scripts:/docker-entrypoint-initdb.d
+    networks:
+      - db_network_ecommerce
+
+  pgadmin:
+    depends_on:
+      - db
+    image: dpage/pgadmin4
+    container_name: pgadmin_gui_ecommerce
+    environment:
+      PGADMIN_DEFAULT_EMAIL: admin@admin.com
+      PGADMIN_DEFAULT_PASSWORD: admin
+    ports: 
+      - "8080:80"
+    volumes:
+      - local_pgadmin_ecommerce:/var/lib/pgadmin
+    networks:
+      - db_network_ecommerce
+
+  app:
+      build: .
+      container_name: python_app_ecommerce
+      depends_on:
+        - db
+      environment:
+        DSN: "dbname=mydb user=admin password=admin host=db port=5432"
+      networks:
+        - db_network_ecommerce
+      volumes:
+        - .:/app
+
+volumes: 
+  local_pgdata_ecommerce:
+  local_pgadmin_ecommerce:
+
+networks:
+  db_network_ecommerce:
