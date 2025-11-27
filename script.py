@@ -2,20 +2,6 @@ import psycopg
 
 DSN = "dbname=mydb user=admin password=admin host=db port=5432"
 
-# def init_db():
-#     with psycopg.connect(DSN) as conn:
-#         with open("../sql/schema.sql", "r", encoding="utf-8") as f:
-#             sql_creation_script = f.read()
-
-#         with open("../sql/data.sql", "r", encoding="utf-8") as f:
-#             sql_data_script = f.read()
-
-#         with conn.cursor() as cur:
-#             cur.execute(sql_creation_script)
-#             cur.execute(sql_data_script)
-
-#     print("Base initialisée !")
-
 def write_report():
     with open("report.txt", "w") as f:
         f.write(f"1. Chiffre d affaires total : {trouver_ca_total()} \n")
@@ -125,5 +111,4 @@ def trouver_ca_par_categorie():
     except Exception as e:
         print ("Erreur à la recherche du ca apr categorie : ", e)
 
-#init_db()
 write_report()
