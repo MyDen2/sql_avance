@@ -5,7 +5,7 @@ services:
     environment:
       POSTGRES_USER: admin
       POSTGRES_PASSWORD: admin
-      POSTGRES_DB: mydb
+      POSTGRES_DB: supershop
     restart : always
     ports: 
       - "5432:5432"
@@ -36,7 +36,7 @@ services:
       depends_on:
         - db
       environment:
-        DSN: "dbname=mydb user=admin password=admin host=db port=5432"
+        DSN: "dbname=supershop user=admin password=admin host=local_pgdb_ecommerce port=5432"
       networks:
         - db_network_ecommerce
       volumes:

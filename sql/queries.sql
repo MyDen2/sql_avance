@@ -186,7 +186,7 @@ CASE
      WHEN SUM(quantity * unit_price) < 100 THEN 'BRONZE'
      WHEN SUM(quantity * unit_price) > 300 THEN 'OR'
      ELSE 'ARGENT'
-    END
+    END AS segment
 FROM order_items oi INNER JOIN orders o ON oi.id_order = o.id_order 
 INNER JOIN customers c ON c.id_customer = o.id_customer
 GROUP BY c.first_name, c.last_name; 

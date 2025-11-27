@@ -1,6 +1,6 @@
 import psycopg
 
-DSN = "dbname=mydb user=admin password=admin host=db port=5432"
+DSN = "dbname=supershop user=admin password=admin host=local_pgdb_ecommerce port=5432"
 
 def write_report():
     with open("report.txt", "w") as f:
