@@ -52,7 +52,7 @@ INSERT INTO products(product_name, price, stock_available, id_category) VALUES
 -- ===========================================
 
 INSERT INTO customers(first_name, last_name, email, created_at) VALUES
-  ('Alice',  'Martin',    'alice.martin@mail.com',    '2024-01-10 14:32'),
+  ('Damien',  'Martin',    'alice.martin@mail.com',    '2024-01-10 14:32'),
   ('Bob',    'Dupont',    'bob.dupont@mail.com',      '2024-02-05 09:10'),
   ('Chloé',  'Bernard',   'chloe.bernard@mail.com',   '2024-03-12 17:22'),
   ('David',  'Robert',    'david.robert@mail.com',    '2024-01-29 11:45'),

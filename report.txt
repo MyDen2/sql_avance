@@ -1,0 +1,14 @@
+1. Chiffre d affaires total : 317.490 
+2. Panier moyen : 31.749 
+3. Article le plus commandé (en quantité totale) : Gel douche FreshEnergy : 5 fois 
+4. Top 3 clients par montant dépensé : 
+Damien Martin
+Katia Garnier
+Chloé Bernard 
+5. Chiffre d affaires par catégorie : 
+ Jeux & Jouets : 55.88 
+ Beauté & Santé : 56.75 
+ Maison & Cuisine : 29.99 
+ Électronique : 129.89 
+ Sport & Loisirs : 44.98 
+  

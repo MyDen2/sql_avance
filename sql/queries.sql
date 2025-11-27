@@ -117,4 +117,129 @@ LIMIT 3;
 --- est **strictement supérieur à la moyenne** de toutes les commandes.
 
 
+---# 9️⃣ Partie 7 – Statistiques & agrégats 
+
+--- 1. Calculer le **chiffre d’affaires total** (toutes commandes confondues, 
+--- hors commandes annulées si souhaité).
+
+SELECT SUM(quantity * unit_price) 
+FROM order_items oi
+INNER JOIN (SELECT * FROM orders WHERE order_status <> 'CANCELLED') t ON t.id_order = oi.id_order;
+
+--- 2. Calculer le **panier moyen** (montant moyen par commande). --- 
+
+SELECT AVG(quantity * unit_price)
+FROM order_items oi;
+
+--- 3. Calculer la **quantité totale vendue par catégorie**. --- 
+SELECT c.category_name, SUM(quantity)
+FROM order_items oi INNER JOIN products p ON p.id_product = oi.id_product
+INNER JOIN categories c ON c.id_category = p.id_category
+GROUP BY c.category_name;
+
+--- 4. Calculer le **chiffre d’affaires par mois** (au moins sur les données fournies).
+
+SELECT DATE_PART('month', order_date), SUM(quantity * unit_price) 
+FROM order_items oi INNER JOIN orders o 
+ON o.id_order = oi.id_order
+GROUP BY DATE_PART('month', order_date); 
+
+--- 5. Formater les montants pour n’afficher que **deux décimales**.
+SELECT round((SELECT AVG(quantity * unit_price)
+FROM order_items oi),2);
+ 
+
+--- # 🔟 Partie 8 – Logique conditionnelle (CASE)
+
+-- 1. Pour chaque commande, afficher :
+
+--    * l’ID de la commande,
+--    * le client,
+--    * la date,
+--    * le statut,
+--    * une version “lisible” du statut en français via `CASE` :
+
+--      * `PAID` → “Payée”
+--      * `SHIPPED` → “Expédiée”
+--      * `PENDING` → “En attente”
+--      * `CANCELLED` → “Annulée”
+
+SELECT o.id_order, c.first_name, c.last_name, o.order_date,
+CASE
+      WHEN o.order_status = 'PAID' THEN 'Payée'
+      WHEN o.order_status = 'SHIPPED' THEN 'Expédiée'
+      WHEN o.order_status = 'PENDING' THEN 'En attente'
+      ELSE 'Annulée'
+    END
+FROM orders o INNER JOIN customers c ON c.id_customer = o.id_customer;
+
+--- 2. Pour chaque client, calculer le **montant total dépensé** et le classer en segments :
+
+--    * `< 100 €`  → “Bronze”
+--    * `100–300 €` → “Argent”
+--    * `> 300 €`  → “Or”
+
+--    Afficher : prénom, nom, montant total, segment.
+
+SELECT c.first_name, c.last_name, SUM(quantity * unit_price),
+CASE 
+     WHEN SUM(quantity * unit_price) < 100 THEN 'BRONZE'
+     WHEN SUM(quantity * unit_price) > 300 THEN 'OR'
+     ELSE 'ARGENT'
+    END
+FROM order_items oi INNER JOIN orders o ON oi.id_order = o.id_order 
+INNER JOIN customers c ON c.id_customer = o.id_customer
+GROUP BY c.first_name, c.last_name; 
+
+
+--- # 1️⃣1️⃣ Partie 9 – Challenge final
+
+--- 1. Top 5 des clients les plus actifs (nombre de commandes).
+
+SELECT c.first_name, c.last_name, COUNT(o.id_customer)
+FROM orders o INNER JOIN customers c ON c.id_customer = o.id_customer
+GROUP BY c.first_name, c.last_name
+ORDER BY COUNT(o.id_customer) DESC 
+LIMIT 5;
+
+--- 2. Top 5 des clients qui ont dépensé le plus (CA total).
+
+SELECT c.first_name, c.last_name, SUM(quantity * unit_price)
+FROM order_items oi INNER JOIN orders o ON o.id_order = oi.id_order
+INNER JOIN customers c ON c.id_customer = o.id_customer
+GROUP BY c.first_name, c.last_name
+ORDER BY SUM(quantity * unit_price) DESC 
+LIMIT 5;
+
+--- 3. Les 3 catégories les plus rentables (CA total).
+
+SELECT c.category_name, SUM(quantity * unit_price)
+FROM order_items oi INNER JOIN products p ON p.id_product = oi.id_product
+INNER JOIN categories c ON c.id_category = p.id_category
+GROUP BY c.category_name
+ORDER BY SUM(quantity * unit_price) DESC 
+LIMIT 3;
+
+
+--- 4. Les produits qui ont généré au total **moins de 10 €** de CA.
+
+SELECT p.product_name, SUM(quantity * unit_price)
+FROM order_items oi INNER JOIN products p ON p.id_product = oi.id_product
+GROUP BY p.product_name
+HAVING SUM(quantity * unit_price) < 10; 
+
+--- 5. Les clients n’ayant passé **qu’une seule commande**.
+
+SELECT c.first_name, c.last_name, COUNT(o.id_customer)
+FROM orders o INNER JOIN customers c ON c.id_customer = o.id_customer
+GROUP BY c.first_name, c.last_name
+HAVING COUNT(o.id_customer) = 1; 
+
+--- 6. Les produits présents dans des commandes **annulées**, avec le montant “perdu”.
+SELECT p.product_name, SUM(quantity * unit_price)
+FROM order_items oi INNER JOIN orders o ON o.id_order = oi.id_order
+INNER JOIN products p ON p.id_product = oi.id_product
+WHERE o.order_status = 'CANCELLED'
+GROUP BY p.product_name;
+
 
