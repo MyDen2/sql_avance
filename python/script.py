@@ -1,9 +1,12 @@
 import psycopg
+import os
+#DSN = os.getenv("DSN")
 
-DSN = "dbname=supershop user=admin password=admin host=local_pgdb_ecommerce port=5432"
+
+DSN = "dbname=supershop user=admin password=admin host=db port=5432"
 
 def write_report():
-    with open("report.txt", "w") as f:
+    with open("rapport/report.txt", "w") as f:
         f.write(f"1. Chiffre d affaires total : {trouver_ca_total()} \n")
         f.write(f"2. Panier moyen : {trouver_panier_moyen()} \n")
         f.write(f"3. Article le plus commandé (en quantité totale) : {trouver_article_le_plus_commande()} \n")

@@ -30,17 +30,20 @@ services:
     networks:
       - db_network_ecommerce
 
-  app:
-      build: .
-      container_name: python_app_ecommerce
-      depends_on:
-        - db
-      environment:
-        DSN: "dbname=supershop user=admin password=admin host=local_pgdb_ecommerce port=5432"
-      networks:
-        - db_network_ecommerce
-      volumes:
-        - .:/app
+  report:
+    build:
+      context: ./python
+      dockerfile: Dockerfile
+    container_name: supershop_report
+    depends_on:
+      - db
+    environment:
+      DSN: "dbname=supershop user=admin password=admin host=db port=5432"
+    volumes:
+      - ./rapport:/app/rapport
+    networks:
+      - db_network_ecommerce
+      
 
 volumes: 
   local_pgdata_ecommerce:
